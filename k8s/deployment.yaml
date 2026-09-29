@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: olmocr-api
+  namespace: ocr-system
+  labels:
+    app: olmocr-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: olmocr-api
+  template:
+    metadata:
+      labels:
+        app: olmocr-api
+    spec:
+      containers:
+        - name: olmocr-api
+          # Sample image — replace with your registry, e.g.
+          # ghcr.io/<YOUR_USERNAME>/olm-ocr:v1.0
+          image: ghcr.io/YOUR_USERNAME/olm-ocr:v1.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8003
+          env:
+            - name: PORT
+              value: "8003"
+            # Sample auth — use a Secret in production, e.g.:
+            # valueFrom:
+            #   secretKeyRef:
+            #     name: olmocr-secrets
+            #     key: api-key
+            - name: OCR_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: olmocr-secrets
+                  key: api-key
+                  optional: true
+            - name: OCR_MODEL_PATH
+              value: "/models/olmOCR-2-7B-1025-Q8_0.gguf"
+            - name: OCR_MMPROJ_PATH
+              value: "/models/mmproj-olmOCR-2-7B-1025-f16.gguf"
+            - name: OCR_CLI_PATH
+              value: "/usr/local/bin/llama-mtmd-cli"
+            - name: OCR_GPU_LAYERS
+              value: "999"
+            - name: OCR_MAX_TOKENS
+              value: "6144"
+            - name: OCR_CTX_SIZE
+              value: "8192"
+          volumeMounts:
+            - name: model-storage
+              mountPath: /models
+            - name: ocr-output
+              mountPath: /ocr_output
+          resources:
+            requests:
+              memory: "4Gi"
+              cpu: "2000m"
+            limits:
+              memory: "16Gi"
+              cpu: "8000m"
+      volumes:
+        - name: model-storage
+          persistentVolumeClaim:
+            claimName: olmocr-model-pvc
+        - name: ocr-output
+          emptyDir: {}
+      # Uncomment if your registry is private:
+      # imagePullSecrets:
+      #   - name: registry-credentials

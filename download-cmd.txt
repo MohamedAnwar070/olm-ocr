@@ -1,0 +1,18 @@
+# Sample model download commands (public Hugging Face repo)
+# Install: pip install "huggingface_hub[cli]"
+
+# 1. Create a local models directory
+#    Windows: mkdir models
+#    Linux:   mkdir -p models
+
+# 2. Download a quantized olmOCR GGUF model (sample)
+huggingface-cli download bartowski/allenai_olmOCR-2-7B-1025-GGUF --include "olmOCR-2-7B-1025-Q5_K_M.gguf" --local-dir "./models"
+
+# 3. Download the matching mmproj file (sample)
+huggingface-cli download bartowski/allenai_olmOCR-2-7B-1025-GGUF --include "mmproj*.gguf" --local-dir "./models"
+
+# 4. Sample inference test (llama.cpp mtmd-cli)
+#    Windows:
+#      llama-mtmd-cli --model .\models\olmOCR-2-7B-1025-Q5_K_M.gguf --mmproj .\models\mmproj-*.gguf --image .\samples\page.png -p "Extract all text preserving structure and tables"
+#    Linux:
+#      llama-mtmd-cli --model ./models/olmOCR-2-7B-1025-Q5_K_M.gguf --mmproj ./models/mmproj-*.gguf --image ./samples/page.png -p "Extract all text preserving structure and tables"

@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Env / secrets — never commit real values
+.env
+*.pem
+*.key
+
+# Models (large binaries, download via download-cmd.txt)
+models/
+*.gguf
+
+# Runtime artifacts (generated per run)
+uploads/*
+!uploads/.gitkeep
+ocr_output/*
+!ocr_output/.gitkeep
+ocr_results/*
+!ocr_results/.gitkeep
+rendered_pages/
+processed_pages/
+
+# Samples: keep code samples, ignore large local test files
+samples/*.pdf
+samples/*.png
+samples/*.jpg
+!samples/.gitkeep
+!samples/README.md
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
